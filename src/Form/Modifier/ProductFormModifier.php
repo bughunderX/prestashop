@@ -25,10 +25,13 @@ namespace PrestaShop\Module\DemoProductForm\Form\Modifier;
 use PrestaShop\Module\DemoProductForm\CQRS\CommandHandler\UpdateCustomProductCommandHandler;
 use PrestaShop\Module\DemoProductForm\Entity\CustomProduct;
 use PrestaShop\Module\DemoProductForm\Form\Type\CustomTabType;
+use PrestaShop\Module\DemoProductForm\Form\Type\ShippingRuleType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShopBundle\Form\Admin\Type\IconButtonType;
 use PrestaShopBundle\Form\FormBuilderModifier;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\CountryType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -79,26 +82,59 @@ final class ProductFormModifier
      */
     private function modifyDescriptionTab(CustomProduct $customProduct, FormBuilderInterface $productFormBuilder): void
     {
-        $descriptionTabFormBuilder = $productFormBuilder->get('description');
+        $descriptionTabFormBuilder = $productFormBuilder->get('shipping');
+        $productFormBuilder -> remove('additional_shipping_cost');
+        
         $this->formBuilderModifier->addAfter(
             $descriptionTabFormBuilder,
-            'description',
-            'demo_module_custom_field',
-            TextType::class,
+            'additional_shipping_cost',
+            'shipping_country',
+            CountryType::class,
             [
-                // you can remove the label if you dont need it by passing 'label' => false
-                'label' => $this->translator->trans('Demo custom field', [], 'Modules.Demoproductform.Admin'),
-                // customize label by any html attribute
+                'label' => 'Country', // Label for the first field
                 'label_attr' => [
-                    'title' => 'h2',
-                    'class' => 'text-info',
+                    'class' => 'col-form-label text-info',
                 ],
                 'attr' => [
-                    'placeholder' => $this->translator->trans('Your example text here', [], 'Modules.Demoproductform.Admin'),
+                    'class' => 'form-control col-6', // Make it take the other half of the row
+                    'placeholder' => 'Select Country',
                 ],
-                // this is just an example, but in real case scenario you could have some data provider class to wrap more complex cases
-                'data' => $customProduct->custom_field,
-                'empty_data' => '',
+                'form_theme' => '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig',
+            ]
+        );
+        
+        $this->formBuilderModifier->addAfter(
+            $descriptionTabFormBuilder,
+            'shipping_country',
+            'shipping_start_rate',
+            TextType::class,
+            [
+                'label' => 'Start Rate', // Label for the second field
+                'label_attr' => [
+                    'class' => 'col-form-label text-info',
+                ],
+                'attr' => [
+                    'class' => 'form-control col-6', // Make it take the other half of the row
+                    'placeholder' => 'Enter value for start shipping fee',
+                ],
+                'form_theme' => '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig',
+            ]
+        );
+        
+        $this->formBuilderModifier->addAfter(
+            $descriptionTabFormBuilder,
+            'shipping_start_rate',
+            'shipping_extra_rate',
+            TextType::class,
+            [
+                'label' => 'Extra Rate', // Label for the second field
+                'label_attr' => [
+                    'class' => 'col-form-label text-info',
+                ],
+                'attr' => [
+                    'class' => 'form-control col-6', // Make it take the other half of the row
+                    'placeholder' => 'Enter value for extra shipping fee',
+                ],
                 'form_theme' => '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig',
             ]
         );
