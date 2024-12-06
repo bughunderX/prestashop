@@ -60,7 +60,7 @@ class DemoProductForm extends Module
         }
 
         $installer = new Installer();
-
+        $this -> createShippingRulesTable();
         return $installer->install($this);
     }
 
@@ -74,10 +74,30 @@ class DemoProductForm extends Module
         }
 
         $installer = new Installer();
-
+        $this -> uninstallDatabase();
         return $installer->uninstall($this);
     }
+    private function createShippingRulesTable()
+    {
+        $sql = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'shipping_rules` (
+            `id_shipping_rule` INT(11) NOT NULL AUTO_INCREMENT,
+            `id_product` INT(11) UNSIGNED NOT NULL,
+            `shipping_country` VARCHAR(2) NOT NULL,
+            `shipping_start_rate` DECIMAL(10, 2) NOT NULL,
+            `shipping_extra_rate` DECIMAL(10, 2) NOT NULL,
+            `date_add` DATETIME DEFAULT CURRENT_TIMESTAMP,
+            `date_upd` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            PRIMARY KEY (`id_shipping_rule`),
+            FOREIGN KEY (`id_product`) REFERENCES `' . _DB_PREFIX_ . 'product` (`id_product`) ON DELETE CASCADE
+        ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8mb4;';
 
+        return Db::getInstance()->execute($sql);
+    }
+    private function uninstallDatabase()
+    {
+        $sql = 'DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'shipping_rules`';
+        return Db::getInstance()->execute($sql);
+    }
     /**
      * @see https://devdocs.prestashop.com/8/modules/creation/module-translation/new-system/#translating-your-module
      *
