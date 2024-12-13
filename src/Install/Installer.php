@@ -72,6 +72,15 @@ class Installer
             'actionCombinationFormFormBuilderModifier',
             'actionAfterUpdateCombinationFormFormHandler',
             'displayAdminProductsExtra',
+            'actionProductSave',
+            'displayShoppingCartFooter',
+            'displayShoppingCart',
+            'actionCartSave',
+            'actionCartUpdate',
+            'actionCarrierProcess',
+            'actionCartUpdateQuantityBefore',
+            'actionProductUpdate',
+            'displayCartModalContent'
         ];
 
         return (bool) $module->registerHook($hooks);

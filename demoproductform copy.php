@@ -204,6 +204,91 @@ class DemoProductForm extends Module
         }
     }
 
+    public function hookDisplayShoppingCartFooter($params)
+    {
+        $cart = $params['cart']; // Get cart object
+        var_dump('hookDisplayShoppingCartFooter');
+        var_dump($cart);
+        die();
+        // $countryId = (int)$cart->id_address_delivery; // Get the destination address
+        // $shippingRules = $this->getShippingRules($cart); // Calculate shipping rules based on cart content
+        
+        // Add custom shipping fee to the cart summary
+        // $this->context->smarty->assign('custom_shipping_fee', $shippingRules['total']);
+        
+        // return $this->display(__FILE__, 'views/templates/hook/custom_shipping_fee.tpl');
+    }
+
+    public function hookDisplayShoppingCart($params)
+    {
+        $cart = $params['cart']; // Get cart object
+        var_dump('hookDisplayShoppingCart');
+        var_dump($cart);
+        die();
+        // $countryId = (int)$cart->id_address_delivery; // Get the destination address
+        // $shippingRules = $this->getShippingRules($cart); // Calculate shipping rules based on cart content
+        
+        // Add custom shipping fee to the cart summary
+        // $this->context->smarty->assign('custom_shipping_fee', $shippingRules['total']);
+        
+        return '<p>Thank you for adding a product to your cart!</p>';
+    }
+    public function hookActionCarrierProcess($params)
+    {
+        $cart = $params['cart'];
+        var_dump('hookActionCartSave');
+        var_dump("RRRRRRRRRRRRRRRRRRRRRR");
+        return '<p>Thank you for adding a product to your cart!</p>';
+        var_dump($cart); exit;
+    }
+    public function hookActionCartSave($params)
+    {
+        $cart = $params['cart']; // Access the cart object
+        var_dump('hookActionCartSave');
+        var_dump($cart);
+        die();
+
+        // You can now access and modify the cart's contents, for example:
+        // $this->updateShippingFees($cart);
+    }
+
+    public function hookActionCartUpdate($params)
+    {
+        $cart = $params['cart']; // Access the cart object
+        var_dump('hookActionCartUpdate');
+        var_dump($cart);
+        die();
+
+        // Call a method to update shipping fees
+        // $this->updateShippingFees($cart);
+    }
+    public function hookDisplayHeader($params)
+    {
+        var_dump('hhhh');
+        die();
+        // Add a custom JavaScript file to monitor cart updates
+        $this->context->controller->addJS($this->_path . 'views/js/cart-monitor.js');
+    }
+    public function hookDisplayCartModalContent($params)
+    {
+        $cart = $params['cart'];
+        var_dump($cart);
+        die();
+        return '<p>Thank you for adding a product to your cart!</p>';
+    }
+    public function hookActionCartUpdateQuantityBefore(array $params)
+    {
+        die(json_encode([
+            'errors' => 'whatever.. due to how the frontend js is done, this won\'t be shown anyways',
+            'hasError' => true,
+        ]));
+    }
+    public function hookActionProductUpdate($params) {
+        
+        $cart = $params['cart'];
+        var_dump($cart);
+        die();
+    }
     /**
      * Hook to display configuration related to the module in the Modules extra tab in product page.
      *
