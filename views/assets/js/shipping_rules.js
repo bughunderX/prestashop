@@ -15,7 +15,6 @@ document.addEventListener("DOMContentLoaded", function () {
         
         const newStartRate = document.querySelector(".new-shipping-start-rate").value;
         const newExtraRate = document.querySelector(".new-shipping-extra-rate").value;
-        alert("Add11 action.");
 
         if (!newCountry || !newStartRate || !newExtraRate) {
             alert("Please fill in all fields before adding a new rule.");
@@ -39,7 +38,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .then((response) => response.json())
             .then((data) => {
                 if (data.success) {
-                    alert("New rule added successfully!");
+                    // alert("New rule added successfully!");
                     // location.reload(); // Refresh to update table
                     // Add the new row to the table
                     const newRow = document.createElement("tr");
@@ -58,13 +57,12 @@ document.addEventListener("DOMContentLoaded", function () {
                             <input type="number" step="0.01" class="form-control shipping-extra-rate" value="${newExtraRate}">
                         </td>
                         <td>
-                            <button class="btn btn-success update-row"><i class="icon-check"></i></button>
-                            <button class="btn btn-danger delete-row"><i class="icon-trash"></i></button>
+                            <button class="btn btn-success update-row"><i class="icon-check">Save</i></button>
+                            <button class="btn btn-danger delete-row"><i class="icon-trash">Delete</i></button>
                         </td>
                     `;
 
                     shippingTableBody.appendChild(newRow);
-                    console.log(newRow);
 
                     // Reset the new rule fields for another addition
                     document.querySelector(".new-shipping-country").value = "";
@@ -86,7 +84,6 @@ document.addEventListener("DOMContentLoaded", function () {
             const country = row.getAttribute("data-country");
             const startRate = row.querySelector(".shipping-start-rate").value;
             const extraRate = row.querySelector(".shipping-extra-rate").value;
-            alert("Update action.");
 
             if (!startRate || !extraRate) {
                 alert("Start rate and extra rate must be provided.");
@@ -110,7 +107,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 .then((response) => response.json())
                 .then((data) => {
                     if (data.success) {
-                        alert("Rule updated successfully!");
+                        // alert("Rule updated successfully!");
                     } else {
                         alert("Error updating rule: " + data.message);
                     }
@@ -126,7 +123,6 @@ document.addEventListener("DOMContentLoaded", function () {
             const row = e.target.closest("tr");
             const productId = row.getAttribute("data-id");
             const country = row.getAttribute("data-country");
-            alert("Delete action.");
 
             if (!confirm("Are you sure you want to delete this rule?")) {
                 return;
@@ -147,7 +143,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 .then((response) => response.json())
                 .then((data) => {
                     if (data.success) {
-                        alert("Rule deleted successfully!");
+                        // alert("Rule deleted successfully!");
                         row.remove(); // Remove row from table
                     } else {
                         alert("Error deleting rule: " + data.message);

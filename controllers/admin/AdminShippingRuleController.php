@@ -34,37 +34,6 @@ class AdminShippingRuleController extends ModuleAdminController
             }
         }
     }
-    private function saveShippingRules(Product $product, $shippingCountry, $shippingStartRate, $shippingExtraRate)
-    {
-        $idProduct = (int) $product->id;
-        $db = Db::getInstance();
-        
-        // Check if a row with the same id_product and shipping_country exists
-        $existingRule = $db->getRow('
-            SELECT `id_shipping_rule`
-            FROM `' . _DB_PREFIX_ . 'shipping_rules`
-            WHERE `id_product` = ' . (int) $idProduct . ' AND `shipping_country` = "' . pSQL($shippingCountry) . '"
-        ');
-    
-        if ($existingRule) {
-            // Row exists, perform an UPDATE
-            $db->update('shipping_rules', [
-                'shipping_start_rate' => (float) $shippingStartRate,
-                'shipping_extra_rate' => (float) $shippingExtraRate,
-                'date_upd' => date('Y-m-d H:i:s')
-            ], 'id_shipping_rule = ' . (int) $existingRule['id_shipping_rule']);
-        } else {
-            // Row doesn't exist, perform an INSERT
-            $db->insert('shipping_rules', [
-                'id_product' => $idProduct,
-                'shipping_country' => pSQL($shippingCountry),
-                'shipping_start_rate' => (float) $shippingStartRate,
-                'shipping_extra_rate' => (float) $shippingExtraRate,
-                'date_add' => date('Y-m-d H:i:s'),
-                'date_upd' => date('Y-m-d H:i:s'),
-            ]);
-        }
-    }
     private function addShippingRule()
     {
         $data = json_decode(Tools::file_get_contents('php://input'), true);
@@ -74,7 +43,7 @@ class AdminShippingRuleController extends ModuleAdminController
         }
     
         $idProduct = (int)$data['id_product'];
-        $country = pSQL($data['country']);
+        $country = (int)($data['country']);
         $startRate = (float)$data['start_rate'];
         $extraRate = (float)$data['extra_rate'];
         
@@ -87,7 +56,7 @@ class AdminShippingRuleController extends ModuleAdminController
             SELECT COUNT(*)
             FROM `' . _DB_PREFIX_ . 'shipping_rules`
             WHERE `id_product` = ' . $idProduct . '
-              AND `shipping_country` = "' . $country . '"
+              AND `id_country` = "' . $country . '"
         ');
     
         if ($exists) {
@@ -100,7 +69,7 @@ class AdminShippingRuleController extends ModuleAdminController
         // If not, insert the new rule
         $result = Db::getInstance()->insert('shipping_rules', [
             'id_product' => $idProduct,
-            'shipping_country' => $country,
+            'id_country' => $country,
             'shipping_start_rate' => $startRate,
             'shipping_extra_rate' => $extraRate,
         ]);
@@ -115,20 +84,24 @@ class AdminShippingRuleController extends ModuleAdminController
 
     private function updateShippingRule()
     {
-        $idProduct = (int)Tools::getValue('id_product');
-        $country = pSQL(Tools::getValue('shipping_country'));
-        $startRate = (float)Tools::getValue('start_rate');
-        $extraRate = (float)Tools::getValue('extra_rate');
-        $this->returnJson(['success' => true, 'message' => true ? 'update' : 'Error adding rule update']);
+        $data = json_decode(Tools::file_get_contents('php://input'), true);
+    
+        if (!$data) {
+            $this->returnJson(['success' => false, 'message' => 'Invalid data']);
+        }
+    
+        $idProduct = (int)$data['id_product'];
+        $country = (int)($data['shipping_country']);
+        $startRate = (float)($data['start_rate']);
+        $extraRate = (float)($data['extra_rate']);
 
         if (!$idProduct || !$country || !$startRate || !$extraRate) {
             $this->returnJson(['success' => false, 'message' => 'Invalid input data']);
         }
-
         $result = Db::getInstance()->update('shipping_rules', [
             'shipping_start_rate' => $startRate,
             'shipping_extra_rate' => $extraRate,
-        ], '`id_product` = ' . $idProduct . ' AND `shipping_country` = "' . $country . '"');
+        ], '`id_product` = ' . $idProduct . ' AND `id_country` = "' . $country . '"');
 
         $this->returnJson(['success' => (bool)$result, 'message' => $result ? 'Rule updated successfully' : 'Error updating rule']);
     }
@@ -142,13 +115,13 @@ class AdminShippingRuleController extends ModuleAdminController
         }
     
         $idProduct = (int)$data['id_product'];
-        $country = pSQL($data['shipping_country']);
+        $country = (int)($data['shipping_country']);
 
         if (!$idProduct || !$country) {
             $this->returnJson(['success' => false, 'message' => 'Invalid input data']);
         }
 
-        $result = Db::getInstance()->delete('shipping_rules', '`id_product` = ' . $idProduct . ' AND `shipping_country` = "' . $country . '"');
+        $result = Db::getInstance()->delete('shipping_rules', '`id_product` = ' . $idProduct . ' AND `id_country` = "' . $country . '"');
 
         $this->returnJson(['success' => (bool)$result, 'message' => $result ? 'Rule deleted successfully' : 'Error deleting rule']);
     }

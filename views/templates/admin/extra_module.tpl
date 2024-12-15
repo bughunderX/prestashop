@@ -9,11 +9,11 @@
     </thead>
     <tbody>
         {foreach from=$shippingRules item=rule}
-            <tr data-id="{$rule.id_product}" data-country="{$rule.shipping_country}">
+            <tr data-id="{$rule.id_product}" data-country="{$rule.id_country}">
                 <td>
                     <select class="form-control shipping-country" disabled>
                         {foreach from=$countries item=country}
-                            <option value="{$country.iso_code}" {if $country.iso_code == $rule.shipping_country}selected{/if}>
+                            <option value="{$country.id_country}" {if $country.id_country == $rule.id_country}selected{/if}>
                                 {$country.name}
                             </option>
                         {/foreach}
@@ -26,8 +26,8 @@
                     <input type="number" step="0.01" class="form-control shipping-extra-rate" value="{$rule.shipping_extra_rate}">
                 </td>
                 <td>
-                    <button class="btn btn-success update-row"><i class="icon-check"></i></button>
-                    <button class="btn btn-danger delete-row"><i class="icon-trash"></i></button>
+                    <button class="btn btn-success update-row"><i class="icon-check">Save</i></button>
+                    <button class="btn btn-danger delete-row"><i class="icon-trash">Delete</i></button>
                 </td>
             </tr>
         {/foreach}
@@ -37,7 +37,7 @@
             <td>
                 <select class="form-control new-shipping-country">
                     {foreach from=$countries item=country}
-                        <option value="{$country.iso_code}">{$country.name}</option>
+                        <option value="{$country.id_country}">{$country.name}</option>
                     {/foreach}
                 </select>
             </td>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
-    <name>demoproductform</name>
-    <displayName><![CDATA[DemoProductForm]]></displayName>
+    <name>customshipping</name>
+    <displayName><![CDATA[CustomShippingFee]]></displayName>
     <version><![CDATA[1.0.0]]></version>
-    <description><![CDATA[DemoProductForm module description]]></description>
+    <description><![CDATA[This is custom shipping fee according to destination]]></description>
     <author><![CDATA[PrestaShop]]></author>
     <tab><![CDATA[]]></tab>
     <is_configurable>0</is_configurable>
